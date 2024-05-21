@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/client';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 import { LOGIN_USER } from '../utils/mutations';
-// import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
@@ -22,16 +21,17 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log(userFormData);
 
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-    }
+    // }
 
     try {
-      const { data } = async login({
+      const { data } = await login({
         variables: { ...userFormData },
       });
 
@@ -89,5 +89,7 @@ const LoginForm = () => {
     </>
   );
 };
+};
 
 export default LoginForm;
+

@@ -6,7 +6,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [login, { error, data }] = useMutation(LOGIN_USER);
   const [validated] = useState(false);
@@ -37,7 +37,7 @@ const LoginForm = () => {
 
       Auth.login(data.login.token);
     } catch (err) {
-      console.error(err);
+      console.error('something happened!!', err);
       setShowAlert(true);
     }
 

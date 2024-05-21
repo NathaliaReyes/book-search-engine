@@ -42,6 +42,14 @@ class AuthService {
     // this will reload the page and reset the state of the application
     window.location.reload();
   }
+
+  
 }
 
 export default new AuthService();
+// make a search to google books api
+// https://www.googleapis.com/books/v1/volumes?q=harry+potter
+export const searchGoogleBooks = (query) => {
+  return fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
+};
+

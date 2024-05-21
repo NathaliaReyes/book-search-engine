@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { SAVE_BOOK } from '../utils/mutations';
 import {
@@ -11,14 +11,13 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
+import { searchGoogleBooks } from '../utils/auth';
 
 const SearchBooks = () => {
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
-  
-  // create state for holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState([]);
-  // create state for holding our search field data
   const [searchInput, setSearchInput] = useState('');
+  const [savedBookIds, setSavedBookIds] = useState([]);
 
 
   // create method to search for books and set state on form submit

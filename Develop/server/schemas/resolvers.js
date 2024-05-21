@@ -10,7 +10,7 @@ const resolvers = {
       if (context.user) {
         return User.findOne({ _id: context.user._id });
       }
-      throw new AuthenticationError;
+      throw AuthenticationError;
     },
   },
   Mutation: {
@@ -35,21 +35,30 @@ const resolvers = {
       return { token, user };
     },
     
-    saveBook: async (parent, { userId, bookInput }) => {
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: userId },
-        { $addToSet: { savedBooks: bookInput } },
-        { new: true, runValidators: true }
-      );
-      return updatedUser;
+    saveBook: async (parent, { userId, bookInput }, context) => {
+      if (context.user && context.user._id === userId) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: userId },
+          { $addToSet: { savedBooks: bookInput } },
+          { new: true, runValidators: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError('You need to be logged in!');
     },
-    removeBook: async (parent, { userId, bookId }) => {
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: userId },
-        { $pull: { savedBooks: { bookId } } },
-        { new: true }
-      );
-      return updatedUser;
+    removeBook: async (parent, { bookId }, context) => {
+      if(context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id, 'savedBooks.bookId': bookId },
+          { $pull: { savedBooks: { bookId } } },
+          { new: true }
+        );
+        if (!updatedUser) {
+          throw new Error('No book with this id found');
+        }
+        return updatedUser;
+      }
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 };

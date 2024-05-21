@@ -16,7 +16,6 @@ module.exports = {
     // allows token to be sent via  req.body, req.query or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
 
-    // ["Bearer", "<tokenvalue>"]
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
     }
@@ -32,6 +31,7 @@ module.exports = {
       req.user = data;
     } catch {
       console.log('Invalid token');
+      throw new Error('invalid token');
     }
 
     return req;

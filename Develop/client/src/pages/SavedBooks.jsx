@@ -9,6 +9,7 @@ import {
   Col
 } from 'react-bootstrap';
 import Auth from '../utils/auth';
+import { removeBookId } from '../utils/auth';
 
 const SavedBooks = () => {
   const { loading, data: userData } = useQuery(GET_ME);
@@ -27,14 +28,14 @@ const SavedBooks = () => {
         variables: { bookId },
       });
       // const response = await deleteBook(bookId, token);
-      // removeBookId(bookId);
+      removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
@@ -47,12 +48,12 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className='pt-5'>
-          {userData.savedBooks.length
+          {userData && userData.savedBooks && userData.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {userData && userData.savedBooks && userData.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>

@@ -11,7 +11,10 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { searchGoogleBooks } from '../utils/auth';
+import { searchGoogleBooks, } from '../utils/auth';
+// import { AuthenticationError } from '../utils/auth';
+
+
 
 const SearchBooks = () => {
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
@@ -32,7 +35,8 @@ const SearchBooks = () => {
       const response = await searchGoogleBooks(searchInput);
 
       if (!response.ok) {
-        throw new Error('something went wrong!');
+        // throw new AuthenticationError('something went wrong!');
+        console.log(error);
       }
 
       const { items } = await response.json();
@@ -48,7 +52,8 @@ const SearchBooks = () => {
       setSearchedBooks(bookData);
       setSearchInput('');
     } catch (err) {
-      console.error(err);
+      // throw new AuthenticationError('something went wrong!');
+      console.log(err);
     }
   };
 
@@ -56,8 +61,6 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
-    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -66,13 +69,23 @@ const SearchBooks = () => {
 
     try {
       const { data } = await saveBook({
-        variables: { bookData: bookToSave },
+        variables: { bookData: { ...bookToSave } },
+        // context: {
+        //   headers: {
+        //     authorization: `Bearer ${token}`
+        //   }
+        // }
       });
-
-      // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    } catch (err) {
-      console.error(err);
+      console.log(data);
+  
+      if (data.saveBook) {
+        setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      } 
+      // else {
+      //   throw new Error('Failed to save book');
+      // }
+    } catch (error) {
+      console.log(error);
     }
   };
 

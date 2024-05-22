@@ -16,13 +16,18 @@ module.exports = {
     // allows token to be sent via  req.body, req.query or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
 
-    if (req.headers.authorization) {
+    if (req.headers.authorization != null) {
       token = token.split(' ').pop().trim();
     }
+
+
 
     if (!token) {
       return req;
     }
+
+    // console.log("This is: ", req.headers.authorization)
+    // console.log(token);
 
     
     // if token can be verified, add the decoded user's data to the request so it can be accessed in the resolver
@@ -31,9 +36,10 @@ module.exports = {
       req.user = data;
     } catch {
       console.log('Invalid token');
-      throw new Error('invalid token');
+      // throw new Error('invalid token');
     }
 
+    // console.log("This is the req: ")
     return req;
   },
   signToken: function ({ username, email, _id }) {

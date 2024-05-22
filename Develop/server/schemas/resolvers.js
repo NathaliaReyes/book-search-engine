@@ -1,5 +1,5 @@
 // const { getSingleUser } = require('../controllers/user-controller');
-const { User, Book } = require('../models');
+const { User } = require('../models');
 
 // import sign token and AuthenticationError function from auth
 const { signToken, AuthenticationError } = require('../utils/auth');
@@ -7,10 +7,10 @@ const { signToken, AuthenticationError } = require('../utils/auth');
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
-      if (context.user) {
+      // if (context.user) {
         return User.findOne({ _id: context.user._id });
-      }
-      throw AuthenticationError;
+      // }
+      // throw AuthenticationError;
     },
   },
   Mutation: {
@@ -35,11 +35,12 @@ const resolvers = {
       return { token, user };
     },
     
-    saveBook: async (parent, { userId, bookInput }, context) => {
-      if (context.user && context.user._id === userId) {
+    saveBook: async (parent, { bookData }, context) => {
+      console.log(bookData);
+      if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
-          { _id: userId },
-          { $addToSet: { savedBooks: bookInput } },
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: bookData } },
           { new: true, runValidators: true }
         );
         return updatedUser;

@@ -80,10 +80,7 @@ const SearchBooks = () => {
   
       if (data.saveBook) {
         setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-      } 
-      // else {
-      //   throw new Error('Failed to save book');
-      // }
+      }
     } catch (error) {
       console.log(error);
     }

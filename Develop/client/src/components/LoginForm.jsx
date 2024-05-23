@@ -6,7 +6,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [login, { error, data }] = useMutation(LOGIN_USER);
   const [validated] = useState(false);
@@ -21,7 +21,7 @@ const LoginForm = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(userFormData);
+    console.log("user: ", userFormData);
 
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
@@ -32,8 +32,10 @@ const LoginForm = (props) => {
 
     try {
       const { data } = await login({
+
         variables: { ...userFormData },
       });
+      console.log(data);
 
       Auth.login(data.login.token);
     } catch (err) {
@@ -57,12 +59,14 @@ const LoginForm = (props) => {
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
+            id='email'
             type='text'
             placeholder='Your email'
             name='email'
             onChange={handleInputChange}
             value={userFormData.email}
             required
+            autoComplete='email'
           />
           <Form.Control.Feedback type='invalid'>Email is required!</Form.Control.Feedback>
         </Form.Group>
@@ -70,12 +74,14 @@ const LoginForm = (props) => {
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='password'>Password</Form.Label>
           <Form.Control
+            id='password'
             type='password'
             placeholder='Your password'
             name='password'
             onChange={handleInputChange}
             value={userFormData.password}
             required
+            autoComplete='current-password'
           />
           <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
         </Form.Group>

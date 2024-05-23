@@ -14,6 +14,7 @@ input BookInput {
   bookId: String!
   image: String
   title: String!
+  link: String
 }
 
 type Book {

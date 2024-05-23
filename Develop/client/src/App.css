@@ -15,3 +15,9 @@ h6 {
   font-weight: 300;
   font-style: italic;
 }
+
+.book-link {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+}

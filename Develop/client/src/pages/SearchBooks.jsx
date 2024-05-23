@@ -12,9 +12,6 @@ import {
 
 import Auth from '../utils/auth';
 import { searchGoogleBooks, } from '../utils/auth';
-// import { AuthenticationError } from '../utils/auth';
-
-
 
 const SearchBooks = () => {
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
@@ -35,7 +32,6 @@ const SearchBooks = () => {
       const response = await searchGoogleBooks(searchInput);
 
       if (!response.ok) {
-        // throw new AuthenticationError('something went wrong!');
         console.log(error);
       }
 
@@ -47,6 +43,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: book.volumeInfo.infoLink || '#',
       }));
 
       setSearchedBooks(bookData);
@@ -131,6 +128,7 @@ const SearchBooks = () => {
                     <Card.Title>{book.title}</Card.Title>
                     <p className='small'>Authors: {book.authors}</p>
                     <Card.Text>{book.description}</Card.Text>
+                    <Card.Link href={book.link} target='_blank' rel='noopener noreferrer' className='small book-link'>Check this book here!</Card.Link>
                     {Auth.loggedIn() && (
                       <Button
                         disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
